@@ -1,0 +1,34 @@
+{
+  "name": "dat-gossip",
+  "version": "1.0.0",
+  "description": "Gossip a set of keys via extension messages on a Hypercore",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RangerMauve/dat-gossip.git"
+  },
+  "keywords": [
+    "dat",
+    "gossip",
+    "discovery",
+    "hypercore",
+    "find",
+    "search"
+  ],
+  "author": "rangermauve",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RangerMauve/dat-gossip/issues"
+  },
+  "homepage": "https://github.com/RangerMauve/dat-gossip#readme",
+  "devDependencies": {
+    "dat-sdk": "^2.0.0-6",
+    "supertape": "^1.2.4"
+  },
+  "dependencies": {
+    "random-access-memory": "^3.1.1"
+  }
+}
