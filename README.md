@@ -41,14 +41,14 @@ Simply put, as new data gets advertised, everyone will eventually know about it.
 
 ## API
 
-### `const gossip = datGossip(core, {extension='dat-gossip@1'})
+### `const gossip = datGossip(core, {extension='dat-gossip@1'})`
 
 Creates a new instance of dat-gossip and starts gossiping over the core's replication streams.
 
 - `core` is a mandatory [hypercore](https://github.com/mafintosh/hypercore) instance which will be used for gossiping with peers
 - `extension` is an option you can add if you wish you use a custom extension message name. You probably don't need to touch this.
 
-### `const isNew = gossip.advertise(data, shouldBroadcast=false)`
+#### `const isNew = gossip.advertise(data, shouldBroadcast=false)`
 
 Adds some more data to be tracked by the gossip.
 
@@ -56,19 +56,19 @@ Adds some more data to be tracked by the gossip.
 - `data` should be a Buffer instance to start gossiping with other peers
 - `shouldBroadcast` controls whether you wish to broadcast your data to every peer. You might want to set this to `false` if you're planning on adding a bunch of items to advertise in a row.
 
-### `gossip.delete(data)`
+#### `gossip.delete(data)`
 
 Removes some data from the internal set. This doesn't mean it won't be found again later through gossip
 
-### `gossip.broadcast()`
+#### `gossip.broadcast()`
 
 Sends out a broadcast of your current set of data to all connected peers.
 
-### `const list = gossip.list()`
+#### `const list = gossip.list()`
 
 Lists all the known bits of data that have been gossiped so far.
 
-### `gossip.close()`
+#### `gossip.close()`
 
 Unregister all listeners from the hypercore and stop sending messages.
 The gossip instance should not be used after this point.
