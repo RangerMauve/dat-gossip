@@ -48,12 +48,18 @@ Creates a new instance of dat-gossip and starts gossiping over the core's replic
 - `core` is a mandatory [hypercore](https://github.com/mafintosh/hypercore) instance which will be used for gossiping with peers
 - `extension` is an option you can add if you wish you use a custom extension message name. You probably don't need to touch this.
 
+### `gossip.on('found', (data))`
+
+Event emitted whenever some new data has been found. You can use this to react to newly gossiped Dat archives and load them up.
+
+- `data` is a Buffer containing the newly found data.
+
 #### `const isNew = gossip.advertise(data, shouldBroadcast=false)`
 
 Adds some more data to be tracked by the gossip.
 
 - `isNew` is a boolean representing whether this data has never been encoutered before
-- `data` should be a Buffer instance to start gossiping with other peers
+- `data` should be a Buffer instance to start gossiping with other peers. This could be your Dat archive's key
 - `shouldBroadcast` controls whether you wish to broadcast your data to every peer. You might want to set this to `false` if you're planning on adding a bunch of items to advertise in a row.
 
 #### `gossip.delete(data)`
