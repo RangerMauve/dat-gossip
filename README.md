@@ -27,6 +27,17 @@ gossip.on('found', (data) => {
 const allKnown = gossip.list()
 ```
 
+## Credits
+
+Ce logiciel a été créé dans le cadre du projet de plateforme virtuelle de création autochtone P2P Natakanu. Une réalisation de Wapikoni Mobile, Uhu Labos Nomades et du Bureau de l'engagement communautaire de l'université Concordia. Projet financé dans le cadre de l'Entente sur le développement culturel de Montréal conclue entre la Ville de Montréal et gouvernement du Québec.
+
+---
+
+This software was created as part of Natakanu, a P2P indigenous  platform produced by Wapikoni Mobile, Uhu Labos Nomades and the Office of Community Engagement at Concordia University. Project funded under the Montreal cultural development agreement between the city of Montreal and the government of Quebec.
+
+![Quebec Provine Logo](quebec.png)
+![Montreal City Logo](montreal.jpg)
+
 ## How it works
 
 - Hold a set of all data seen before
