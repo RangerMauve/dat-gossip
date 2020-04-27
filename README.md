@@ -5,7 +5,7 @@ Gossip a set of keys via extension messages on a Hypercore
 npm install --save dat-gossip
 ```
 
-```example
+```js
 const datGossip = require('dat-gossip')
 
 // Get a hypercore from _somewhere_ which all your peers are swarming on
