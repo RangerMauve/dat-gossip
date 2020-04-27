@@ -35,8 +35,8 @@ Ce logiciel a été créé dans le cadre du projet de plateforme virtuelle de cr
 
 This software was created as part of Natakanu, a P2P indigenous  platform produced by Wapikoni Mobile, Uhu Labos Nomades and the Office of Community Engagement at Concordia University. Project funded under the Montreal cultural development agreement between the city of Montreal and the government of Quebec.
 
-![Quebec Provine Logo](quebec.png)
-![Montreal City Logo](montreal.jpg)
+<img src="quebec.png" width="395" alt="Quebec Province Logo" />
+<img src="montreal.jpg" width="395" alt="Montreal City Logo" />
 
 ## How it works
 
