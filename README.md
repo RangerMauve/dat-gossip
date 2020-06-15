@@ -18,8 +18,8 @@ const gossip = datGossip(discoveryCore)
 gossip.advertise(Buffer.from('Something'), true)
 
 // Listen for when new data has been discovered
-gossip.on('found', (data) => {
-	console.log('Found some new data', data)
+gossip.on('change', (list) => {
+	console.log('Latest data', list)
 })
 
 // Get an array of buffers for all known data
@@ -59,23 +59,21 @@ Creates a new instance of dat-gossip and starts gossiping over the core's replic
 - `core` is a mandatory [hypercore](https://github.com/mafintosh/hypercore) instance which will be used for gossiping with peers
 - `extension` is an option you can add if you wish you use a custom extension message name. You probably don't need to touch this.
 
-#### `gossip.on('found', (data))`
+#### `gossip.on('changed', (list))`
 
 Event emitted whenever some new data has been found. You can use this to react to newly gossiped Dat archives and load them up.
 
-- `data` is a Buffer containing the newly found data.
+- `list` is an array of the current keys.
 
-#### `const isNew = gossip.advertise(data, shouldBroadcast=false)`
+#### `gossip.advertise(data)`
 
 Adds some more data to be tracked by the gossip.
 
-- `isNew` is a boolean representing whether this data has never been encoutered before
 - `data` should be a Buffer instance to start gossiping with other peers. This could be your Dat archive's key
-- `shouldBroadcast` controls whether you wish to broadcast your data to every peer. You might want to set this to `false` if you're planning on adding a bunch of items to advertise in a row.
 
 #### `gossip.delete(data)`
 
-Removes some data from the internal set. This doesn't mean it won't be found again later through gossip
+Removes some data from the internal set. This will update other peers that you no longer wish to gossip this data.
 
 #### `gossip.broadcast()`
 
@@ -84,9 +82,3 @@ Sends out a broadcast of your current set of data to all connected peers.
 #### `const list = gossip.list()`
 
 Lists all the known bits of data that have been gossiped so far.
-
-#### `gossip.close()`
-
-Unregister all listeners from the hypercore and stop sending messages.
-The gossip instance should not be used after this point.
-You will still need to call `close` on your hypercore instance to clean it up.

@@ -30,20 +30,26 @@ class DatGossip extends EventEmitter {
     this.emit('changed', keys)
   }
 
+  _updateData () {
+    const keys = [...this.keys].map((key) => key.toString('hex'))
+
+    this.presence.setData({ keys })
+  }
+
   advertise (key) {
     const stringKey = key.toString('hex')
     if (this.keys.has(stringKey)) return false
 
     this.keys.add(stringKey)
 
-    const keys = [...this.keys].map((key) => key.toString('hex'))
-
-    this.presence.setData({ keys })
+    this._updateData()
   }
 
   delete (key) {
     const stringKey = key.toString('hex')
     this.keys.delete(stringKey)
+
+    this._updateData()
   }
 
   list () {
