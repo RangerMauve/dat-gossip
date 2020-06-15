@@ -5,8 +5,8 @@ const { once } = require('events')
 
 const datGossip = require('./')
 
-const DATA_ONE = Buffer.from('One')
-const DATA_TWO = Buffer.from('Two')
+const DATA_ONE = Buffer.from('0000', 'hex')
+const DATA_TWO = Buffer.from('AAAA', 'hex')
 const FULL_LIST = [DATA_ONE, DATA_TWO]
 
 test('gossip between two peers', async (t) => {
@@ -21,19 +21,28 @@ test('gossip between two peers', async (t) => {
 
   const core2 = sdk2.Hypercore(core1.key)
 
-  const gossip1 = datGossip(core1)
-  const gossip2 = datGossip(core2)
+  const { publicKey: id1 } = await sdk1.getIdentity()
+  const { publicKey: id2 } = await sdk2.getIdentity()
+
+  const gossip1 = datGossip(core1, { id: id1 })
+  const gossip2 = datGossip(core2, { id: id2 })
 
   gossip1.advertise(DATA_ONE)
   gossip2.advertise(DATA_TWO)
 
-  const [[found1], [found2]] = await Promise.all([
-    once(gossip1, 'found'),
-    once(gossip2, 'found')
-  ])
+  let found1 = null
+  let found2 = null
+  while (true) {
+    const [[_found1], [_found2]] = await Promise.all([
+      once(gossip1, 'changed'),
+      once(gossip2, 'changed')
+    ])
 
-  t.deepEqual(found1, DATA_TWO, 'First gossip found data')
-  t.deepEqual(found2, DATA_ONE, 'Second gossip found data')
+    found1 = _found1
+    found2 = _found2
+
+    if ((found1.length === 2) && (found2.length === 2)) break
+  }
 
   const list1 = gossip1.list()
   const list2 = gossip2.list()

@@ -1,36 +1,44 @@
 const EventEmitter = require('events')
 
+const HypercorePresence = require('hyper-presence')
+
 module.exports = (core, opts) => new DatGossip(core, opts)
 
-const DEFAULT_EXTENSION = 'dat-gossip@1'
+const DEFAULT_EXTENSION = 'dat-gossip@2'
+
+const DEFAULT_DATA = {
+  keys: []
+}
 
 class DatGossip extends EventEmitter {
-  constructor (core, { extension = DEFAULT_EXTENSION } = {}) {
+  constructor (core, { extension = DEFAULT_EXTENSION, id } = {}) {
     super()
+    this.presence = new HypercorePresence(core, { extension, id, data: DEFAULT_DATA })
+
     this.core = core
+
     this.keys = new Set()
 
-    this._onMessage = this._onMessage.bind(this)
-    this._onPeerAdd = this._onPeerAdd.bind(this)
+    this._emitKeys = this._emitKeys.bind(this)
 
-    this.extension = this.core.registerExtension(extension, {
-      encoding: 'json',
-      onmessage: this._onMessage
-    })
-
-    this.core.on('peer-open', this._onPeerAdd)
+    this.presence.on('online', this._emitKeys)
+    this.presence.on('peer-data', this._emitKeys)
   }
 
-  advertise (key, shouldBroadcast = false) {
+  _emitKeys () {
+    const keys = this.list()
+    this.emit('changed', keys)
+  }
+
+  advertise (key) {
     const stringKey = key.toString('hex')
     if (this.keys.has(stringKey)) return false
 
     this.keys.add(stringKey)
-    this.emit('found', key)
 
-    if (shouldBroadcast) this.broadcast()
+    const keys = [...this.keys].map((key) => key.toString('hex'))
 
-    return true
+    this.presence.setData({ keys })
   }
 
   delete (key) {
@@ -39,45 +47,25 @@ class DatGossip extends EventEmitter {
   }
 
   list () {
-    return [...this.keys].sort().map((key) => Buffer.from(key, 'hex'))
+    const all = new Set(this.keys)
+
+    for (const id of this.presence.online) {
+      const data = this.presence.getPeerData(id)
+      if (!data) continue
+
+      const { keys } = data
+      if (!keys || !keys.length) continue
+
+      for (const key of keys) {
+        all.add(key)
+      }
+    }
+
+    return [...all].sort().map((key) => Buffer.from(key, 'hex'))
   }
 
   close () {
     this.extension.destroy()
     this.core.removeListener('peer-open', this._onPeerAdd)
-  }
-
-  broadcast () {
-    this.extension.broadcast({ keys: [...this.keys] })
-  }
-
-  _onPeerAdd (peer) {
-    this.extension.send({ keys: [...this.keys] }, peer)
-  }
-
-  _onMessage (message, peer) {
-    const { keys } = message
-    if (!keys) return
-
-    let shouldBroadcast = false
-
-    for (const key of this.keys) {
-      // If this peer doesn't know about some of our keys
-      // We should make sure everyone knows our keys
-      if (!keys.includes(key)) shouldBroadcast = true
-    }
-
-    for (const key of keys) {
-      // If this peer has kees we didn't know about
-      // We should make sure everyone knows about them
-      if (!this.keys.has(key)) {
-        shouldBroadcast = true
-        this.advertise(Buffer.from(key, 'hex'))
-      }
-    }
-
-    if (shouldBroadcast) {
-      this.broadcast()
-    }
   }
 }
