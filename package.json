@@ -1,6 +1,6 @@
 {
   "name": "dat-gossip",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Gossip a set of keys via extension messages on a Hypercore",
   "main": "index.js",
   "scripts": {
