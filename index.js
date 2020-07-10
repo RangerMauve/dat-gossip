@@ -6,14 +6,10 @@ module.exports = (core, opts) => new DatGossip(core, opts)
 
 const DEFAULT_EXTENSION = 'dat-gossip@2'
 
-const DEFAULT_DATA = {
-  keys: []
-}
-
 class DatGossip extends EventEmitter {
   constructor (core, { extension = DEFAULT_EXTENSION, id } = {}) {
     super()
-    this.presence = new HypercorePresence(core, { extension, id, data: DEFAULT_DATA })
+    this.presence = new HypercorePresence(core, { extension, id, data: {keys: []} })
 
     this.core = core
 

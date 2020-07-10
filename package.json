@@ -26,10 +26,10 @@
   "homepage": "https://github.com/RangerMauve/dat-gossip#readme",
   "devDependencies": {
     "dat-sdk": "^2.0.0-6",
-    "supertape": "^1.2.4"
+    "supertape": "^1.2.4",
+    "random-access-memory": "^3.1.1"
   },
   "dependencies": {
-    "hyper-presence": "^1.0.1",
-    "random-access-memory": "^3.1.1"
+    "hyper-presence": "^1.1.3"
   }
 }

@@ -5,8 +5,8 @@ const { once } = require('events')
 
 const datGossip = require('./')
 
-const DATA_ONE = Buffer.from('0000', 'hex')
-const DATA_TWO = Buffer.from('AAAA', 'hex')
+const DATA_ONE = Buffer.from('666', 'hex')
+const DATA_TWO = Buffer.from('FFF', 'hex')
 const FULL_LIST = [DATA_ONE, DATA_TWO]
 
 test('gossip between two peers', async (t) => {
@@ -33,13 +33,13 @@ test('gossip between two peers', async (t) => {
   let found1 = null
   let found2 = null
   while (true) {
-    const [[_found1], [_found2]] = await Promise.all([
+    await Promise.race([
       once(gossip1, 'changed'),
       once(gossip2, 'changed')
     ])
 
-    found1 = _found1
-    found2 = _found2
+    found1 = gossip1.list()
+    found2 = gossip2.list()
 
     if ((found1.length === 2) && (found2.length === 2)) break
   }
